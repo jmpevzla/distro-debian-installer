@@ -1,0 +1,45 @@
+distro:
+  name: Debian
+  number: 13
+  version: trixie
+  mode: efi # efi / mbr
+  partitions:
+    root: /dev/sdb2
+    efi: /dev/sdb1
+  mount:
+    root: /mnt
+    efi: /mnt/efi
+  log:
+    file: distro.log
+    clear_per_stage: Yes # Yes/No
+  config:
+    arch: amd64
+    repo: http://deb.debian.org/debian
+    rtc: LOCAL # UTC / LOCAL
+    tz: America/Caracas # /usr/share/zoneinfo
+    hostname: distro-vm
+  stages:
+    s0:
+      desc: Bootstrap a basic debian system
+      script: s0-bootstrap.sh
+    s1:
+      desc: Generate /etc/fstab
+      script: s1-genfstab.sh
+    s2:
+      desc: Install aptitude & standard profile
+      script: s2-aptitude.sh
+    s3:
+      desc: Adjust RTC
+      script: s3-rtc.sh
+    s4:
+      desc: Set timezone
+      script: s4-tzdata.sh
+    s5:
+      desc: Set hostname
+      script: s5-hostname.sh
+    s6:
+      desc: Configure hosts
+      script: s6-hosts.sh
+    s7:
+      desc: Configure apt sources
+      script: s7-repos.sh
