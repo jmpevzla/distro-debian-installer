@@ -14,6 +14,8 @@ distro:
     clear_per_stage: Yes # Yes/No
   config:
     arch: amd64
+    efi_target: x86_64-efi
+    grub_mbr: /dev/sdb
     repo: http://deb.debian.org/debian
     rtc: UTC # UTC / LOCAL
     tz:
@@ -33,6 +35,7 @@ distro:
       variant: Español
       variantcode: ""
       modelcode: pc105
+    user: distro
   stages:
     s0:
       desc: Bootstrap a basic debian system
@@ -64,4 +67,21 @@ distro:
     s9:
       desc: Configure apt repositories sources
       script: s9-repos.sh
-    
+    s10:
+      desc: Install Kernel
+      script: s10-kernel.sh
+    s11:
+      desc: Install Grub
+      script: s11-grub.sh
+    s12:
+      desc: Install firmware non-free
+      script: s12-firmware-nonfree.sh
+    s13:
+      desc: Install network tools
+      script: s13-net-tools.sh
+    s14:
+      desc: Set Password root
+      script: s14-passwd.sh
+    s15:
+      desc: Set User
+      script: s15-user.sh
