@@ -1,11 +1,13 @@
 #!/bin/bash
 
-source ./ps-mount.sh
+source ./loader.sh
 
 run 'echo ""'
 run 'echo "=== Begin Distro Installer - Stage 1 ==="'
 run 'echo ""'
 
+umount_part
+mount_part
 info
 
 run 'echo "$(yq '.distro.stages.s1.desc' "$DISTRO_CONFIG")"'

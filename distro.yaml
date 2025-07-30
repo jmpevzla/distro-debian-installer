@@ -15,20 +15,23 @@ distro:
   config:
     arch: amd64
     repo: http://deb.debian.org/debian
-    rtc: LOCAL # UTC / LOCAL
-    tz: America/Caracas # /usr/share/zoneinfo
+    rtc: UTC # UTC / LOCAL
+    tz:
+      area: America
+      zone: Caracas
     hostname: distro-vm
     locale:
       gen:
         - en_US.UTF-8 UTF-8
         - es_ES.UTF-8 UTF-8
-      default: es_ES.UTF-8
+        - es_VE.UTF-8 UTF-8
+      default: es_VE.UTF-8
     keyboard:
-      variant: Español
-      xkb-keymap: es
-      layoutcode: es
       layout: Spanish
-      model: PC genérico 105 teclas
+      layoutcode: es
+      xkb-keymap: es
+      variant: Español
+      variantcode: ""
       modelcode: pc105
   stages:
     s0:
@@ -38,26 +41,27 @@ distro:
       desc: Generate /etc/fstab
       script: s1-genfstab.sh
     s2:
-      desc: Install aptitude & standard profile
-      script: s2-aptitude.sh
-    s3:
       desc: Adjust RTC
-      script: s3-rtc.sh
-    s4:
+      script: s2-rtc.sh
+    s3:
       desc: Set timezone
-      script: s4-tzdata.sh
-    s5:
-      desc: Set hostname
-      script: s5-hostname.sh
-    s6:
-      desc: Configure hosts
-      script: s6-hosts.sh
-    s7:
-      desc: Configure apt sources
-      script: s7-repos.sh
-    s8:
+      script: s3-tzdata.sh
+    s4:
       desc: Locale generation
-      script: s8-locale.sh
-    s9:
+      script: s4-locale.sh
+    s5:
       desc: Keyboard configuration
-      script: s9-keyboard.sh
+      script: s5-keyboard.sh
+    s6:
+      desc: Install aptitude & standard profile
+      script: s6-aptitude.sh
+    s7:
+      desc: Set hostname
+      script: s7-hostname.sh
+    s8:
+      desc: Configure hosts
+      script: s8-hosts.sh
+    s9:
+      desc: Configure apt repositories sources
+      script: s9-repos.sh
+    

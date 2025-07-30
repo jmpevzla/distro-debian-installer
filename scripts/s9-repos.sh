@@ -1,16 +1,16 @@
 #!/bin/bash
 
-source ./apt.sh
+source ./loader.sh
 
 run 'echo ""'
-run 'echo "=== Begin Distro Installer - Stage 7 ==="'
+run 'echo "=== Begin Distro Installer - Stage 9 ==="'
 run 'echo ""'
 
+stage_mount
 info
 
-run 'echo "$(yq '.distro.stages.s7.desc' "$DISTRO_CONFIG")"'
+run 'echo "$(yq '.distro.stages.s9.desc' "$DISTRO_CONFIG")"'
 
-ROOTM="$(yq '.distro.mount.root' "$DISTRO_CONFIG" | tr -d '\"')"
 VERSION="$(yq '.distro.version' "$DISTRO_CONFIG" | tr -d '\"')"
 REPO="$(yq '.distro.config.repo' "$DISTRO_CONFIG" | tr -d '\"')"
 
@@ -34,5 +34,5 @@ EOF
 apt_update
 
 run 'echo ""'
-run 'echo "=== End Distro Installer - Stage 7 ==="'
+run 'echo "=== End Distro Installer - Stage 9 ==="'
 run 'echo ""'

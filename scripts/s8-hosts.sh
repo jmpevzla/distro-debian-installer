@@ -1,16 +1,16 @@
 #!/bin/bash
 
-source ./chroot.sh
+source ./loader.sh
 
 run 'echo ""'
-run 'echo "=== Begin Distro Installer - Stage 6 ==="'
+run 'echo "=== Begin Distro Installer - Stage 8 ==="'
 run 'echo ""'
 
+stage_mount
 info
 
-run 'echo "$(yq '.distro.stages.s6.desc' "$DISTRO_CONFIG")"'
+run 'echo "$(yq '.distro.stages.s8.desc' "$DISTRO_CONFIG")"'
 
-ROOTM="$(yq '.distro.mount.root' "$DISTRO_CONFIG" | tr -d '\"')"
 HOSTNAME="$(yq '.distro.config.hostname' "$DISTRO_CONFIG" | tr -d '\"')"
 
 run 'echo "Set Hosts in /etc/hosts"'
@@ -23,5 +23,5 @@ ff02::2         ip6-allrouters
 EOF
 
 run 'echo ""'
-run 'echo "=== End Distro Installer - Stage 6 ==="'
+run 'echo "=== End Distro Installer - Stage 8 ==="'
 run 'echo ""'

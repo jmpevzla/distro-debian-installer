@@ -1,39 +1,42 @@
 #!/bin/bash
 
-source ./apt.sh
+source ./loader.sh
 
 run 'echo ""'
-run 'echo "=== Begin Distro Installer - Stage 9 ==="'
+run 'echo "=== Begin Distro Installer - Stage 5 ==="'
 run 'echo ""'
 
+stage_mount
 info
 
-run 'echo "$(yq '.distro.stages.s8.desc' "$DISTRO_CONFIG")"'
+run 'echo "$(yq '.distro.stages.s5.desc' "$DISTRO_CONFIG")"'
 
-ROOTM="$(yq '.distro.mount.root' "$DISTRO_CONFIG" | tr -d '\"')"
+apt_update
+croot 'apt autoremove -y --purge console-setup'
 
 run 'echo ""'
 VARIANT="$(yq '.distro.config.keyboard.variant' "$DISTRO_CONFIG" | tr -d '\"')"
+VARIANTCODE="$(yq '.distro.config.keyboard.variantcode' "$DISTRO_CONFIG" | tr -d '\"')"
 XKBKEYMAP="$(yq '.distro.config.keyboard."xkb-keymap"' "$DISTRO_CONFIG" | tr -d '\"')"
 LAYOUT="$(yq '.distro.config.keyboard.layout' "$DISTRO_CONFIG" | tr -d '\"')"
 LAYOUTCODE="$(yq '.distro.config.keyboard.layoutcode' "$DISTRO_CONFIG" | tr -d '\"')"
-MODEL="$(yq '.distro.config.keyboard.model' "$DISTRO_CONFIG" | tr -d '\"')"
 MODELCODE="$(yq '.distro.config.keyboard.modelcode' "$DISTRO_CONFIG" | tr -d '\"')"
 
 run 'echo "Set Keyboard with values:"'
-run 'echo "Variant: $VARIANT"'
-run 'echo "xkb-keymap: $XKBKEYMAP"'
 run 'echo "Layout: $LAYOUT"'
 run 'echo "Layout Code: $LAYOUTCODE"'
-run 'echo "Model: $MODEL"'
+run 'echo "xkb-keymap: $XKBKEYMAP"'
+run 'echo "Variant: $VARIANT"'
+run 'echo "Variant Code: $VARIANTCODE"'
 run 'echo "Model Code: $MODELCODE"'
 run 'echo ""'
 
 cat << EOF > "$ROOTM"/tmp/keyboard-preseed.conf
-keyboard-configuration keyboard-configuration/xkb-keymap select $XKBKEYMAP
+keyboard-configuration keyboard-configuration/variantcode string $VARIANTCODE
 keyboard-configuration keyboard-configuration/variant select $VARIANT
-keyboard-configuration keyboard-configuration/layoutcode string $LAYOUTCODE
 keyboard-configuration keyboard-configuration/layout select $LAYOUT
+keyboard-configuration keyboard-configuration/layoutcode string $LAYOUTCODE
+keyboard-configuration keyboard-configuration/xkb-keymap string $XKBKEYMAP
 keyboard-configuration keyboard-configuration/modelcode string $MODELCODE
 keyboard-configuration keyboard-configuration/compose select No compose key
 keyboard-configuration keyboard-configuration/toggle select No toggling
@@ -59,8 +62,8 @@ EOF
 croot 'debconf-set-selections /tmp/keyboard-preseed.conf'
 croot 'debconf-set-selections /tmp/console-preseed.conf'
 
-croot 'apt -y install console-setup'
+croot 'apt install -y console-setup'
 
 run 'echo ""'
-run 'echo "=== End Distro Installer - Stage 9 ==="'
+run 'echo "=== End Distro Installer - Stage 5 ==="'
 run 'echo ""'

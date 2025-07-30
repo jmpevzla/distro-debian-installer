@@ -1,21 +1,21 @@
 #!/bin/bash
 
-source ./chroot.sh
+source ./loader.sh
 
 run 'echo ""'
-run 'echo "=== Begin Distro Installer - Stage 5 ==="'
+run 'echo "=== Begin Distro Installer - Stage 7 ==="'
 run 'echo ""'
 
+stage_mount
 info
 
-run 'echo "$(yq '.distro.stages.s5.desc' "$DISTRO_CONFIG")"'
+run 'echo "$(yq '.distro.stages.s7.desc' "$DISTRO_CONFIG")"'
 
-ROOTM="$(yq '.distro.mount.root' "$DISTRO_CONFIG" | tr -d '\"')"
 HOSTNAME="$(yq '.distro.config.hostname' "$DISTRO_CONFIG" | tr -d '\"')"
 
 run 'echo "Set Hostname to \"$HOSTNAME\" in /etc/hostname"'
 run 'echo "$HOSTNAME" > /"$ROOTM"/etc/hostname'
 
 run 'echo ""'
-run 'echo "=== End Distro Installer - Stage 5 ==="'
+run 'echo "=== End Distro Installer - Stage 7 ==="'
 run 'echo ""'
