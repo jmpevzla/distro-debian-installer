@@ -18,6 +18,18 @@ distro:
     rtc: LOCAL # UTC / LOCAL
     tz: America/Caracas # /usr/share/zoneinfo
     hostname: distro-vm
+    locale:
+      gen:
+        - en_US.UTF-8 UTF-8
+        - es_ES.UTF-8 UTF-8
+      default: es_ES.UTF-8
+    keyboard:
+      variant: Español
+      xkb-keymap: es
+      layoutcode: es
+      layout: Spanish
+      model: PC genérico 105 teclas
+      modelcode: pc105
   stages:
     s0:
       desc: Bootstrap a basic debian system
@@ -43,3 +55,9 @@ distro:
     s7:
       desc: Configure apt sources
       script: s7-repos.sh
+    s8:
+      desc: Locale generation
+      script: s8-locale.sh
+    s9:
+      desc: Keyboard configuration
+      script: s9-keyboard.sh
