@@ -20,7 +20,7 @@ PFILE="../.user.env"
 if [[ -f "$PFILE" ]]; then
     croot 'useradd -m -G users,sudo,audio,video,plugdev -s /bin/bash $USER'
     croot 'passwd $USER < ../.user.env'
-    # echo -n "" > ../.user.env
+    echo -n "" > ../.user.env
 
     croot 'cp /etc/sudoers /etc/sudoers.bak'
     sed -i -E "s/^#\s*%sudo\s+ALL=\(ALL(:ALL)?\)\s+ALL$/%sudo ALL=(ALL:ALL) ALL/" "$ROOTM/etc/sudoers"
