@@ -85,3 +85,36 @@ distro:
     s15:
       desc: Set User
       script: s15-user.sh
+    s16:
+      desc: Install System Packages
+      script: s16-sys.sh
+    s17:
+      desc: Install Bluetooth Packages
+      script: s17-bluetooth.sh
+    s18:
+      desc: Install Openssh Server
+      script: s18-openssh.sh
+    s19:
+      desc: Install CUPS Server
+      script: s19-cups.sh
+    s20:
+      desc: Install Extras L0
+      script: s20-extras-l0.sh
+    s21:
+      desc: Install Extras L1
+      script: s21-extras-l1.sh
+    s22:
+      desc: Install Extras L2
+      script: s22-extras-l2.sh
+    s23:
+      desc: Install Extras L3
+      script: s23-extras-l3.sh
+    s24:
+      desc: Install Emacs nox
+      script: s24-emacs-nox.sh
+    s25:
+      desc: Install neovim
+      script: s25-neovim.sh
+    s26:
+      desc: Install lazygit
+      script: s26-lazygit.sh
