@@ -1,12 +1,17 @@
 #!/bin/bash
 
-source ./chroot.sh
+if [[ ! -f "./installer.lock" ]]; then
+    source ../helper.sh
+    load_path
+fi
 
 run 'echo ""'
 run 'echo "=== Begin Distro Installer - Stage 3 ==="'
 run 'echo ""'
 
-info
+if [[ ! -f "./installer.lock" ]]; then
+    load_single
+fi
 
 run 'echo "$(yq '.distro.stages.s3.desc' "$DISTRO_CONFIG")"'
 

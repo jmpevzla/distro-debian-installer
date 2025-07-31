@@ -3,3 +3,4 @@
 TODO
 *.log
 *.env
+*.lock

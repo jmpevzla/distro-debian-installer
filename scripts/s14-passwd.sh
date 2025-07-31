@@ -1,21 +1,26 @@
 #!/bin/bash
 
-source ./loader.sh
+if [[ ! -f "./installer.lock" ]]; then
+    source ../helper.sh
+    load_path
+fi
 
 run 'echo ""'
 run 'echo "=== Begin Distro Installer - Stage 14 ==="'
 run 'echo ""'
 
-stage_mount
-info
+if [[ ! -f "./installer.lock" ]]; then
+    load_single
+    PFILE="../.root.env"
+else
+    PFILE="./.root.env"
+fi
 
 run 'echo "$(yq '.distro.stages.s14.desc' "$DISTRO_CONFIG")"'
 
-PFILE="../.root.env"
-
 if [[ -f "$PFILE" ]]; then
-    croot 'passwd root < ../.root.env'
-    echo -n "" > ../.root.env
+    croot 'passwd root < $PFILE'
+    echo -n "" > $PFILE
 else
     run 'echo ".root.env not exist!"'
 fi

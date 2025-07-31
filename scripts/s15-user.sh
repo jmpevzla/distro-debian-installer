@@ -1,13 +1,20 @@
 #!/bin/bash
 
-source ./loader.sh
+if [[ ! -f "./installer.lock" ]]; then
+    source ../helper.sh
+    load_path
+fi
 
 run 'echo ""'
 run 'echo "=== Begin Distro Installer - Stage 15 ==="'
 run 'echo ""'
 
-stage_mount
-info
+if [[ ! -f "./installer.lock" ]]; then
+    load_single
+    PFILE="../.user.env"
+else
+    PFILE="./.user.env"
+fi
 
 run 'echo "$(yq '.distro.stages.s15.desc' "$DISTRO_CONFIG")"'
 
@@ -15,12 +22,11 @@ apt_update
 croot 'apt install -y sudo'
 
 USER="$(yq '.distro.config.user' "$DISTRO_CONFIG" | tr -d '\"')"
-PFILE="../.user.env"
 
 if [[ -f "$PFILE" ]]; then
     croot 'useradd -m -G users,sudo,audio,video,plugdev -s /bin/bash $USER'
-    croot 'passwd $USER < ../.user.env'
-    echo -n "" > ../.user.env
+    croot 'passwd $USER < $PFILE'
+    echo -n "" > $PFILE
 
     croot 'cp /etc/sudoers /etc/sudoers.bak'
     sed -i -E "s/^#\s*%sudo\s+ALL=\(ALL(:ALL)?\)\s+ALL$/%sudo ALL=(ALL:ALL) ALL/" "$ROOTM/etc/sudoers"

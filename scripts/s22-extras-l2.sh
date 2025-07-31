@@ -1,13 +1,17 @@
 #!/bin/bash
 
-source ./loader.sh
+if [[ ! -f "./installer.lock" ]]; then
+    source ../helper.sh
+    load_path
+fi
 
 run 'echo ""'
 run 'echo "=== Begin Distro Installer - Stage 22 ==="'
 run 'echo ""'
 
-stage_mount
-info
+if [[ ! -f "./installer.lock" ]]; then
+    load_single
+fi
 
 run 'echo "$(yq '.distro.stages.s22.desc' "$DISTRO_CONFIG")"'
 

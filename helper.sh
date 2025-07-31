@@ -1,14 +1,20 @@
 #!/bin/bash
 
-DISTRO_CONFIG="../distro.yaml"
+dconfig() {
+    DISTRO_CONFIG="$1/distro.yaml"
+}
 
-LOG_FILE="../$(yq '.distro.log.file' "$DISTRO_CONFIG" | tr -d '\"')"
-SHOULD_CLEAR_LOG="$(yq '.distro.log.clear_per_stage' "$DISTRO_CONFIG" | tr -d '\"')"
-if [[ "$SHOULD_CLEAR_LOG" == "Yes" ]]; then
-    rm -f "$LOG_FILE"
-fi
+rootm() {
+    ROOTM="$(yq '.distro.mount.root' "$DISTRO_CONFIG" | tr -d '\"')"
+}
 
-ROOTM="$(yq '.distro.mount.root' "$DISTRO_CONFIG" | tr -d '\"')"
+dlog() {
+    LOG_FILE="$1/$(yq '.distro.log.file' "$DISTRO_CONFIG" | tr -d '\"')"
+    SHOULD_CLEAR_LOG="$(yq '.distro.log.clear_per_stage' "$DISTRO_CONFIG" | tr -d '\"')"
+    if [[ "$SHOULD_CLEAR_LOG" == "Yes" ]]; then
+	rm -f "$LOG_FILE"
+    fi
+}
 
 run() {
     local command="$@"
@@ -25,8 +31,8 @@ info() {
 
 umount_part() {
     local EFIM="$(yq '.distro.mount.efi' "$DISTRO_CONFIG" | tr -d '\"')"
-    run "umount -v $EFIM"
-    run "umount -v $ROOTM"
+    run "umount -v -R $EFIM"
+    run "umount -v -R $ROOTM"
 }
 
 mount_part() {
@@ -39,17 +45,20 @@ mount_part() {
 }
 
 umount_sys() {
-    umount -v $ROOTM/sys/firmware/efi/efivars
-    umount -v $ROOTM/proc
-    umount -v $ROOTM/sys
-    umount -v $ROOTM/dev
+    run "umount -v -R $ROOTM/proc"
+    run "umount -v -R $ROOTM/sys"
+    run "umount -v -R $ROOTM/dev"
+    run "umount -v -R $ROOTM/run"
 }
 
 mount_sys() {
-    mount -v --bind /dev $ROOTM/dev
-    mount -v --bind /sys $ROOTM/sys
-    mount -v --bind /proc $ROOTM/proc
-    mount -v -t efivarfs none $ROOTM/sys/firmware/efi/efivars
+    run "mount -v --types proc /proc $ROOTM/proc"
+    run "mount -v --rbind /sys $ROOTM/sys"
+    run "mount -v --make-rslave $ROOTM/sys"
+    run "mount -v --rbind /dev $ROOTM/dev"
+    run "mount -v --make-rslave $ROOTM/dev"
+    run "mount -v --rbind /run $ROOTM/run"
+    run "mount -v --make-slave $ROOTM/run"
 }
 
 stage_mount() {
@@ -60,6 +69,18 @@ stage_mount() {
     run 'echo ""'
 }
 
+load_path() {
+    dconfig ".."
+    dlog ".."
+    rootm
+}
+
+load_single() {
+    stage_mount
+    run 'echo ""'
+    info   
+}
+
 croot() {
     run "chroot $ROOTM" "$@"
 }
@@ -67,4 +88,3 @@ croot() {
 apt_update() {
     croot 'apt update'
 }
-
