@@ -37,84 +37,88 @@ distro:
       modelcode: pc105
     user: distro
   stages:
-    s0:
+    - script: ss0-bootstrap.sh
       desc: Bootstrap a basic debian system
-      script: s0-bootstrap.sh
-    s1:
+      
+    - script: ss1-genfstab.sh
       desc: Generate /etc/fstab
-      script: s1-genfstab.sh
-    s2:
+
+    - script: ss2-rtc.sh
       desc: Adjust RTC
-      script: s2-rtc.sh
-    s3:
+
+    - script: ss3-tzdata.sh
       desc: Set timezone
-      script: s3-tzdata.sh
-    s4:
+
+    - script: ss4-locale.sh
       desc: Locale generation
-      script: s4-locale.sh
-    s5:
+
+    - script: ss5-keyboard.sh
       desc: Keyboard configuration
-      script: s5-keyboard.sh
-    s6:
+
+    - script: ss6-aptitude.sh
       desc: Install aptitude & standard profile
-      script: s6-aptitude.sh
-    s7:
+      
+    - script: ss7-hostname.sh
       desc: Set hostname
-      script: s7-hostname.sh
-    s8:
+      
+    - script: ss8-hosts.sh
       desc: Configure hosts
-      script: s8-hosts.sh
-    s9:
+      
+    - script: ss9-repos.sh
       desc: Configure apt repositories sources
-      script: s9-repos.sh
-    s10:
+      
+    - script: ss10-kernel.sh
       desc: Install Kernel
-      script: s10-kernel.sh
-    s11:
+
+    - script: ss11-grub.sh
       desc: Install Grub
-      script: s11-grub.sh
-    s12:
-      desc: Install firmware non-free
-      script: s12-firmware-nonfree.sh
-    s13:
+      
+    - script: ss12-firmware.sh  
+      desc: Install firmware
+
+    - script: ss13-firmware-extras.sh  
+      desc: Install firmware extras
+
+    - script: ss14-net-tools.sh  
       desc: Install network tools
-      script: s13-net-tools.sh
-    s14:
+
+    - script: ss15-user.sh
       desc: Set Password root
-      script: s14-passwd.sh
-    s15:
-      desc: Set User
-      script: s15-user.sh
-    s16:
+
+    - script: sr0-passwd.sh
+      desc: Set Password root
+
+    - script: sr1-sys.sh
       desc: Install System Packages
-      script: s16-sys.sh
-    s17:
-      desc: Install Bluetooth Packages
-      script: s17-bluetooth.sh
-    s18:
-      desc: Install Openssh Server
-      script: s18-openssh.sh
-    s19:
-      desc: Install CUPS Server
-      script: s19-cups.sh
-    s20:
+
+    - script: sr2-extras-l0.sh
       desc: Install Extras L0
-      script: s20-extras-l0.sh
-    s21:
-      desc: Install Extras L1
-      script: s21-extras-l1.sh
-    s22:
-      desc: Install Extras L2
-      script: s22-extras-l2.sh
-    s23:
-      desc: Install Extras L3
-      script: s23-extras-l3.sh
-    s24:
-      desc: Install Emacs nox
-      script: s24-emacs-nox.sh
-    s25:
-      desc: Install neovim
-      script: s25-neovim.sh
-    s26:
-      desc: Install lazygit
-      script: s26-lazygit.sh
+
+    # - script: so0-bluetooth.sh
+    #   desc: Install System Packages
+
+    # - script: so1-openssh.sh
+    #   desc: Install Openssh Server
+
+    # - script: so2-cups.sh
+    #   desc: Install CUPS Server
+
+    # - script: so3-extras-l1.sh
+    #   desc: Install Extras L1
+
+    # - script: so4-extras-l2.sh
+    #   desc: Install Extras L2
+
+    # - script: so5-extras-l3.sh
+    #   desc: Install Extras L3
+
+    # - script: so6-emacs-nox.sh
+    #   desc: Install Emacs nox (no X support)
+
+    # - script: so7-neovim.sh
+    #   desc: Install Neovim
+
+    # - script: so8-lazygit.sh
+    #   desc: Install lazygit
+
+    

@@ -5,8 +5,10 @@ if [[ ! -f "./installer.lock" ]]; then
     load_path
 fi
 
+FILE=$(basename "$BASH_SOURCE")
+
 run 'echo ""'
-run 'echo "=== Begin Distro Installer - Stage 15 ==="'
+run 'echo "=== Begin Distro Installer - $FILE ==="'
 run 'echo ""'
 
 if [[ ! -f "./installer.lock" ]]; then
@@ -16,7 +18,7 @@ else
     PFILE="./.user.env"
 fi
 
-run 'echo "$(yq '.distro.stages.s15.desc' "$DISTRO_CONFIG")"'
+get_desc "$FILE"
 
 apt_update
 croot 'apt install -y sudo'
@@ -36,5 +38,5 @@ else
 fi
 
 run 'echo ""'
-run 'echo "=== End Distro Installer - Stage 15 ==="'
+run 'echo "=== End Distro Installer - $FILE ==="'
 run 'echo ""'

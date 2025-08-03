@@ -29,6 +29,16 @@ info() {
     run 'echo ""'
 }
 
+get_desc() {
+    yq -r '.distro.stages[] | .script, .desc' "$DISTRO_CONFIG" | while IFS= read -r script && IFS= read -r desc; do
+	if [[ $script == "$1"  ]]; then
+	    run 'echo "$desc"'
+	    run 'echo ""'
+	    break
+	fi
+    done
+}
+
 umount_part() {
     local EFIM="$(yq '.distro.mount.efi' "$DISTRO_CONFIG" | tr -d '\"')"
     run "umount -v -R $EFIM"
@@ -51,7 +61,7 @@ umount_sys() {
     run "umount -v -R $ROOTM/run"
 }
 
-mount_sys() {
+mount_sys() { 
     run "mount -v --types proc /proc $ROOTM/proc"
     run "mount -v --rbind /sys $ROOTM/sys"
     run "mount -v --make-rslave $ROOTM/sys"
@@ -88,3 +98,4 @@ croot() {
 apt_update() {
     croot 'apt update'
 }
+

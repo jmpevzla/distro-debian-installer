@@ -5,15 +5,17 @@ if [[ ! -f "./installer.lock" ]]; then
     load_path
 fi
 
+FILE=$(basename "$BASH_SOURCE")
+
 run 'echo ""'
-run 'echo "=== Begin Distro Installer - Stage 11 ==="'
+run 'echo "=== Begin Distro Installer - $FILE ==="'
 run 'echo ""'
 
 if [[ ! -f "./installer.lock" ]]; then
     load_single
 fi
 
-run 'echo "$(yq '.distro.stages.s11.desc' "$DISTRO_CONFIG")"'
+get_desc "$FILE"
 
 NAME="$(yq '.distro.name' "$DISTRO_CONFIG" | tr -d '\"')"
 MODE="$(yq '.distro.mode' "$DISTRO_CONFIG" | tr -d '\"')"
@@ -33,5 +35,5 @@ fi
 croot 'update-grub'
 
 run 'echo ""'
-run 'echo "=== End Distro Installer - Stage 11 ==="'
+run 'echo "=== End Distro Installer - $FILE ==="'
 run 'echo ""'

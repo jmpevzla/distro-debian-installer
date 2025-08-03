@@ -4,3 +4,4 @@ TODO
 *.log
 *.env
 *.lock
+*.bak

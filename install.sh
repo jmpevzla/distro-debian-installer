@@ -18,49 +18,28 @@ if [[ -f ./installer.lock  ]]; then
 fi
 
 touch installer.lock
-
-umount_sys
-umount_part
-
 shopt -s lastpipe
-declare -i inte
-values=()
-yq '.distro.stages | keys[]' "$DISTRO_CONFIG" | tr -d '"' | while read -r stage_key; do
-    inte=${stage_key:1}
-    values+=(${inte})
-done
-printf "%i\n" "${values[@]}" | sort -n | readarray -t values
-
-is_mount_part=0
-is_mount_sys=0
-for st in "${values[@]}"; do
-    if [[ $st -ge 0 && $is_mount_part -eq 0 ]]; then
-	mount_part
-	is_mount_part=1
-    fi
-    if [[ $st -gt 1 && $is_mount_sys -eq 0 ]]; then
-	mount_sys
-	is_mount_sys=1
-    fi
-    key=".distro.stages.s$st.script"
-    script="$(yq "$key" "$DISTRO_CONFIG" | tr -d '"')"
-    echo "script: $script"
-    source "./scripts/$script"
-    
-    # if [[ $st == 15 ]]; then
-    # 	echo "script: $script"
-    # 	source "./scripts/$script"
-    # 	umount_sys
-    # 	umount_part
-    # 	unset values
-    # 	rm -f installer.lock
-    # 	exit
-    # fi
-done
 
 umount_sys
 umount_part
-unset values
+
+run 'echo ""'
+mount_part
+is_sys_mounted=0
+yq -r '.distro.stages[] | .script, .desc' "$DISTRO_CONFIG" | while IFS= read -r script && IFS= read -r desc; do
+    if [[ $script != "ss0-bootstrap.sh" && $is_sys_mounted == 0 ]]; then
+	mount_sys
+	is_sys_mounted=1
+    fi
+
+    run 'echo ""'
+    # run 'echo "script: $script"'
+    source "./scripts/$script"
+done
+
+run 'echo ""'
+umount_sys
+umount_part
 rm -f installer.lock
 run 'echo ""'
 run 'echo "=== End Distro Installer ==="'

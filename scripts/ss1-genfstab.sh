@@ -5,8 +5,10 @@ if [[ ! -f "./installer.lock" ]]; then
     load_path
 fi
 
+FILE=$(basename "$BASH_SOURCE")
+
 run 'echo ""'
-run 'echo "=== Begin Distro Installer - Stage 1 ==="'
+run 'echo "=== Begin Distro Installer - $FILE ==="'
 run 'echo ""'
 
 if [[ ! -f "./installer.lock" ]]; then
@@ -16,13 +18,11 @@ if [[ ! -f "./installer.lock" ]]; then
     info 
 fi
 
-run 'echo "$(yq '.distro.stages.s1.desc' "$DISTRO_CONFIG")"'
-
-ROOTM="$(yq '.distro.mount.root' "$DISTRO_CONFIG" | tr -d '\"')"
+get_desc "$FILE"
 
 run 'genfstab -U $ROOTM > $ROOTM/etc/fstab'
 run 'cat $ROOTM/etc/fstab'
 
 run 'echo ""'
-run 'echo "=== End Distro Installer - Stage 1 ==="'
+run 'echo "=== End Distro Installer - $FILE ==="'
 run 'echo ""'

@@ -5,15 +5,17 @@ if [[ ! -f "./installer.lock" ]]; then
     load_path
 fi
 
+FILE=$(basename "$BASH_SOURCE")
+
 run 'echo ""'
-run 'echo "=== Begin Distro Installer - Stage 4 ==="'
+run 'echo "=== Begin Distro Installer - $FILE ==="'
 run 'echo ""'
 
 if [[ ! -f "./installer.lock" ]]; then
     load_single
 fi
 
-run 'echo "$(yq '.distro.stages.s4.desc' "$DISTRO_CONFIG")"'
+get_desc "$FILE"
 
 apt_update
 croot 'apt remove -y --purge locales'
@@ -45,5 +47,5 @@ croot 'debconf-set-selections /tmp/locales_preseed.conf'
 croot 'apt install -y locales'
 
 run 'echo ""'
-run 'echo "=== End Distro Installer - Stage 4 ==="'
+run 'echo "=== End Distro Installer - $FILE ==="'
 run 'echo ""'
