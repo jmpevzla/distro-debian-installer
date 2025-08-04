@@ -5,10 +5,16 @@ distro:
   mode: efi # efi / mbr
   partitions:
     root: /dev/sdb2
-    efi: /dev/sdb1
+    efi: /dev/sdb1 # If the mode is mbr here it must be equal to null
+    boot: null
+    home: null
+    var: null
+    tmp: null
+    opt: null
+    usrlocal: null
   mount:
     root: /mnt
-    efi: /mnt/efi
+    efi: /mnt/efi # If the mode is mbr here it must be equal to null
   log:
     file: distro.log
     clear_per_stage: Yes # Yes/No
@@ -36,64 +42,69 @@ distro:
       variantcode: ""
       modelcode: pc105
     user: distro
+    desktop:
+      type: lxde # none, kde, xfce, lxde
+      install: full # minimal, standard, full
+      extras: Yes # Yes / No
   stages:
-    - script: ss0-bootstrap.sh
-      desc: Bootstrap a basic debian system
+    # - script: ss0-bootstrap.sh
+    #   desc: Bootstrap a basic debian system
       
-    - script: ss1-genfstab.sh
-      desc: Generate /etc/fstab
+    # - script: ss1-genfstab.sh
+    #   desc: Generate /etc/fstab
 
-    - script: ss2-rtc.sh
-      desc: Adjust RTC
+    # - script: ss2-rtc.sh
+    #   desc: Adjust RTC
 
-    - script: ss3-tzdata.sh
-      desc: Set timezone
+    # - script: ss3-tzdata.sh
+    #   desc: Set timezone
 
-    - script: ss4-locale.sh
-      desc: Locale generation
+    # - script: ss4-locale.sh
+    #   desc: Locale generation
 
-    - script: ss5-keyboard.sh
-      desc: Keyboard configuration
+    # - script: ss5-keyboard.sh
+    #   desc: Keyboard configuration
 
-    - script: ss6-aptitude.sh
-      desc: Install aptitude & standard profile
+    # - script: ss6-aptitude.sh
+    #   desc: Install aptitude & standard profile
       
-    - script: ss7-hostname.sh
-      desc: Set hostname
+    # - script: ss7-hostname.sh
+    #   desc: Set hostname
       
-    - script: ss8-hosts.sh
-      desc: Configure hosts
+    # - script: ss8-hosts.sh
+    #   desc: Configure hosts
       
-    - script: ss9-repos.sh
-      desc: Configure apt repositories sources
+    # - script: ss9-repos.sh
+    #   desc: Configure apt repositories sources
       
-    - script: ss10-kernel.sh
-      desc: Install Kernel
+    # - script: ss10-kernel.sh
+    #   desc: Install Kernel
 
-    - script: ss11-grub.sh
-      desc: Install Grub
+    # - script: ss11-grub.sh
+    #   desc: Install Grub
       
-    - script: ss12-firmware.sh  
-      desc: Install firmware
+    # - script: ss12-firmware.sh  
+    #   desc: Install firmware
 
-    - script: ss13-firmware-extras.sh  
-      desc: Install firmware extras
+    # - script: ss13-firmware-extras.sh  
+    #   desc: Install firmware extras
 
-    - script: ss14-net-tools.sh  
-      desc: Install network tools
+    # - script: ss14-net-tools.sh  
+    #   desc: Install network tools
 
-    - script: ss15-user.sh
-      desc: Set Password root
+    # - script: ss15-user.sh
+    #   desc: Set Password root
 
-    - script: sr0-passwd.sh
-      desc: Set Password root
+    # - script: sr0-passwd.sh
+    #   desc: Set Password root
 
-    - script: sr1-sys.sh
-      desc: Install System Packages
+    # - script: sr1-sys.sh
+    #   desc: Install System Packages
 
-    - script: sr2-extras-l0.sh
-      desc: Install Extras L0
+    # - script: sr2-extras-l0.sh
+    #   desc: Install Extras L0
 
+    
     # - script: so0-bluetooth.sh
     #   desc: Install System Packages
 
@@ -121,4 +132,11 @@ distro:
     # - script: so8-lazygit.sh
     #   desc: Install lazygit
 
-    
+    - script: so9-kde.sh
+      desc: Install KDE Desktop
+
+    - script: so10-xfce.sh
+      desc: Install XFCE Desktop
+
+    - script: so11-lxde.sh
+      desc: Install LXDE Desktop

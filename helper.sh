@@ -40,18 +40,72 @@ get_desc() {
 }
 
 umount_part() {
-    local EFIM="$(yq '.distro.mount.efi' "$DISTRO_CONFIG" | tr -d '\"')"
-    run "umount -v -R $EFIM"
     run "umount -v -R $ROOTM"
 }
 
 mount_part() {
-    local EFIM="$(yq '.distro.mount.efi' "$DISTRO_CONFIG" | tr -d '\"')"
-    local EFIP="$(yq '.distro.partitions.efi' "$DISTRO_CONFIG" | tr -d '\"')"
-    local ROOTP="$(yq '.distro.partitions.root' "$DISTRO_CONFIG" | tr -d '\"')" 
+    local MODE="$(yq -r '.distro.mode' "$DISTRO_CONFIG")"
+
+    local EFIM="$(yq -r '.distro.mount.efi' "$DISTRO_CONFIG")"
+    local EFIP="$(yq -r '.distro.partitions.efi' "$DISTRO_CONFIG")"
+    local ROOTP="$(yq -r '.distro.partitions.root' "$DISTRO_CONFIG")"
+
+    local BOOTP="$(yq -r '.distro.partitions.boot' "$DISTRO_CONFIG")"
+    local BOOTM="$ROOTM/boot"
+
+    local HOMEP="$(yq -r '.distro.partitions.home' "$DISTRO_CONFIG")"
+    local HOMEM="$ROOTM/home"
+
+    local VARP="$(yq -r '.distro.partitions.var' "$DISTRO_CONFIG")"
+    local VARM="$ROOTM/var"
+
+    local TMPP="$(yq -r '.distro.partitions.tmp' "$DISTRO_CONFIG")"
+    local TMPM="$ROOTM/tmp"
+
+    local OPTP="$(yq -r '.distro.partitions.opt' "$DISTRO_CONFIG")"
+    local OPTM="$ROOTM/opt"
+
+    local USRLOCALP="$(yq -r '.distro.partitions.usrlocal' "$DISTRO_CONFIG")"
+    local USRLOCALM="$ROOTM/usr/local"
+    
     run "mount -v $ROOTP $ROOTM"
-    run "mkdir -pv $EFIM"
-    run "mount -v $EFIP $EFIM"
+
+    if [[ $MODE == "efi" && $EFIP != "null" && $EFIM != 'null' ]]; then
+       run "mkdir -pv $EFIM"
+       run "mount -v $EFIP $EFIM"	
+    fi
+
+    if [[ $BOOTP != 'null' ]]; then
+       run "mkdir -pv $BOOTM"
+       run "mount -v $BOOTP $BOOTM"	
+    fi
+
+    if [[ $HOMEP != 'null' ]]; then
+       run "mkdir -pv $HOMEM"
+       run "mount -v $HOMEP $HOMEM"	
+    fi
+
+    if [[ $VARP != 'null' ]]; then
+       run "mkdir -pv $VARM"
+       run "mount -v $VARP $VARM"	
+    fi
+
+    if [[ $TMPP != 'null' ]]; then
+       run "mkdir -pv $TMPM"
+       run "mount -v $TMPP $TMPM"
+
+       run "chmod -v 1777 $TMPM"
+    fi
+
+    if [[ $OPTP != 'null' ]]; then
+       run "mkdir -pv $OPTM"
+       run "mount -v $OPTP $OPTM"	
+    fi
+
+    if [[ $USRLOCALP != 'null' ]]; then
+       run "mkdir -pv $USRLOCALM"
+       run "mount -v $USRLOCALP $USRLOCALM"	
+    fi
 }
 
 umount_sys() {
