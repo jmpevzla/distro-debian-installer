@@ -10,7 +10,7 @@ rootm() {
 
 dlog() {
     LOG_FILE="$1/$(yq '.distro.log.file' "$DISTRO_CONFIG" | tr -d '\"')"
-    SHOULD_CLEAR_LOG="$(yq '.distro.log.clear_per_stage' "$DISTRO_CONFIG" | tr -d '\"')"
+    SHOULD_CLEAR_LOG="$(yq '.distro.log.clear_at_init' "$DISTRO_CONFIG" | tr -d '\"')"
     if [[ "$SHOULD_CLEAR_LOG" == "Yes" ]]; then
 	rm -f "$LOG_FILE"
     fi
@@ -40,6 +40,11 @@ get_desc() {
 }
 
 umount_part() {
+    local SWAPMODE="$(yq -r '.distro.swap.mode' "$DISTRO_CONFIG")"
+    if [[ $SWAPMODE == "file" ]]; then
+	local SWAPFILE="$(yq -r '.distro.swap.file.name' "$DISTRO_CONFIG")"
+	run "swapoff -v $ROOTM/$SWAPFILE"
+    fi
     run "umount -v -R $ROOTM"
 }
 
@@ -116,13 +121,20 @@ umount_sys() {
 }
 
 mount_sys() { 
-    run "mount -v --types proc /proc $ROOTM/proc"
-    run "mount -v --rbind /sys $ROOTM/sys"
-    run "mount -v --make-rslave $ROOTM/sys"
-    run "mount -v --rbind /dev $ROOTM/dev"
-    run "mount -v --make-rslave $ROOTM/dev"
-    run "mount -v --rbind /run $ROOTM/run"
-    run "mount -v --make-slave $ROOTM/run"
+    # run "mount -v --types proc /proc $ROOTM/proc"
+    # run "mount -v --rbind /sys $ROOTM/sys"
+    # run "mount -v --make-rslave $ROOTM/sys"
+    # run "mount -v --rbind /dev $ROOTM/dev"
+    # run "mount -v --make-rslave $ROOTM/dev"
+    # run "mount -v --rbind /run $ROOTM/run"
+    # run "mount -v --make-slave $ROOTM/run"
+
+    run "mount -v --bind /proc $ROOTM/proc"
+    run "mount -v --bind /dev $ROOTM/dev"
+    run "mount -v --bind /dev/pts $ROOTM/dev/pts"
+    run "mount -v --bind /sys $ROOTM/sys"
+    run "mount -v --bind /run $ROOTM/run"
+    run "mount -v --bind /sys/firmware/efi/efivars $ROOTM/sys/firmware/efi/efivars"
 }
 
 stage_mount() {

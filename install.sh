@@ -32,12 +32,10 @@ yq -r '.distro.stages[] | .script, .desc' "$DISTRO_CONFIG" | while IFS= read -r 
 	is_sys_mounted=1
     fi
 
-    run 'echo ""'
     # run 'echo "script: $script"'
     source "./scripts/$script"
 done
 
-run 'echo ""'
 umount_sys
 umount_part
 rm -f installer.lock

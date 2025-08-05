@@ -21,6 +21,7 @@ fi
 get_desc "$FILE"
 
 run 'genfstab -U $ROOTM > $ROOTM/etc/fstab'
+run 'sed -i "/\/run/d" $ROOTM/etc/fstab'
 run 'cat $ROOTM/etc/fstab'
 
 run 'echo ""'

@@ -15,9 +15,20 @@ distro:
   mount:
     root: /mnt
     efi: /mnt/efi # If the mode is mbr here it must be equal to null
+  swap:
+    mode: file # null, partition, file, zram
+    partition:
+      value: /dev/sdb3
+    file:
+      name: swapfile
+      size: 512 # in MB
+    zram:
+      algo: lz4  # lz4, zstd
+      perc: 40 # (null, 1-100) takes precedence and overrides "size" below
+      size: 4096 # in MiB
   log:
     file: distro.log
-    clear_per_stage: Yes # Yes/No
+    clear_at_init: Yes # Yes/No
   config:
     arch: amd64
     efi_target: x86_64-efi
@@ -43,66 +54,69 @@ distro:
       modelcode: pc105
     user: distro
     desktop:
-      type: lxde # none, kde, xfce, lxde
-      install: full # minimal, standard, full
+      type: kde # none, kde, xfce, lxde
+      install: minimal # minimal, standard, full
       extras: Yes # Yes / No
   stages:
-    # - script: ss0-bootstrap.sh
-    #   desc: Bootstrap a basic debian system
+    - script: ss0-bootstrap.sh
+      desc: Bootstrap a basic debian system
       
-    # - script: ss1-genfstab.sh
-    #   desc: Generate /etc/fstab
+    - script: ss1-swap.sh
+      desc: Create & activate swap in system
 
-    # - script: ss2-rtc.sh
-    #   desc: Adjust RTC
+    - script: ss1-z1-genfstab.sh
+      desc: Create genfstab in system
 
-    # - script: ss3-tzdata.sh
-    #   desc: Set timezone
+    - script: ss2-rtc.sh
+      desc: Adjust RTC
 
-    # - script: ss4-locale.sh
-    #   desc: Locale generation
+    - script: ss3-tzdata.sh
+      desc: Set timezone
 
-    # - script: ss5-keyboard.sh
-    #   desc: Keyboard configuration
+    - script: ss4-locale.sh
+      desc: Locale generation
 
-    # - script: ss6-aptitude.sh
-    #   desc: Install aptitude & standard profile
+    - script: ss5-keyboard.sh
+      desc: Keyboard configuration
+
+    - script: ss6-aptitude.sh
+      desc: Install aptitude & standard profile
       
-    # - script: ss7-hostname.sh
-    #   desc: Set hostname
+    - script: ss7-hostname.sh
+      desc: Set hostname
       
-    # - script: ss8-hosts.sh
-    #   desc: Configure hosts
+    - script: ss8-hosts.sh
+      desc: Configure hosts
       
-    # - script: ss9-repos.sh
-    #   desc: Configure apt repositories sources
+    - script: ss9-repos.sh
+      desc: Configure apt repositories sources
       
-    # - script: ss10-kernel.sh
-    #   desc: Install Kernel
+    - script: ss10-kernel.sh
+      desc: Install Kernel
 
-    # - script: ss11-grub.sh
-    #   desc: Install Grub
+    - script: ss11-grub.sh
+      desc: Install Grub
       
-    # - script: ss12-firmware.sh  
-    #   desc: Install firmware
+    - script: ss12-firmware.sh  
+      desc: Install firmware
 
-    # - script: ss13-firmware-extras.sh  
-    #   desc: Install firmware extras
+    - script: ss13-firmware-extras.sh  
+      desc: Install firmware extras
 
-    # - script: ss14-net-tools.sh  
-    #   desc: Install network tools
+    - script: ss14-net-tools.sh  
+      desc: Install network tools
 
-    # - script: ss15-user.sh
-    #   desc: Set Password root
+    - script: ss15-user.sh
+      desc: Set Password root
 
-    # - script: sr0-passwd.sh
-    #   desc: Set Password root
+    - script: sr0-passwd.sh
+      desc: Set Password root
 
-    # - script: sr1-sys.sh
-    #   desc: Install System Packages
+    - script: sr1-sys.sh
+      desc: Install System Packages
 
-    # - script: sr2-extras-l0.sh
-    #   desc: Install Extras L0
+    - script: sr2-extras-l0.sh
+      desc: Install Extras L0
 
     
     # - script: so0-bluetooth.sh

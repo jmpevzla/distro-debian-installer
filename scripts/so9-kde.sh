@@ -45,7 +45,7 @@ if [[ $DTYPE == "kde" ]]; then
 
     # Debian's selection of applications for a KDE desktop
     if [[ $DEXTRAS == "Yes" ]]; then
-	croot 'apt install -y task-kde-desktop'
+	croot 'apt install -y task-kde-desktop vlc synaptic'
     fi
 
 
